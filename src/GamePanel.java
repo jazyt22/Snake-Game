@@ -20,7 +20,7 @@ public class GamePanel extends JPanel implements ActionListener {
     int FruitsEaten;
     int FruitsX;
     int FruitsY;
-    char direction = 'Z';
+    char direction = 'S';
     boolean Slithering = false;
     Timer GameTimer;
     Random random;
@@ -48,31 +48,35 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     public void draw(Graphics g) {
-        for (int i = 0; i < SCREEN_HEIGHT / UNIT_SIZE; i++) {
-            g.drawLine(i * UNIT_SIZE, 0, i * UNIT_SIZE, SCREEN_HEIGHT);
-            g.drawLine(0, i * UNIT_SIZE, SCREEN_WIDTH, i * UNIT_SIZE);
-        }
+        if(Slithering) {
 
-        //Design and Color of Fruit / Apple
-        g.setColor(Color.red);
-        g.fillOval(FruitsX, FruitsY, UNIT_SIZE, UNIT_SIZE);
-
-        //Design and color of Snake Body Parts
-        for (int i = 0; i < BodyParts; i++) {
-            if (i == 0) {
-                g.setColor(Color.darkGray);
-                g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
-            } else {
-                g.setColor(Color.gray);
-                g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+            for (int i = 0; i < SCREEN_HEIGHT / UNIT_SIZE; i++) {
+                g.drawLine(i * UNIT_SIZE, 0, i * UNIT_SIZE, SCREEN_HEIGHT);
+                g.drawLine(0, i * UNIT_SIZE, SCREEN_WIDTH, i * UNIT_SIZE);
             }
+
+            //Design and Color of Fruit / Apple
+            g.setColor(Color.red);
+            g.fillOval(FruitsX, FruitsY, UNIT_SIZE, UNIT_SIZE);
+
+            //Design and color of Snake Body Parts
+            for (int i = 0; i < BodyParts; i++) {
+                if (i == 0) {
+                    g.setColor(Color.darkGray);
+                    g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+                } else {
+                    g.setColor(Color.gray);
+                    g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+                }
+            }
+            //Score
+            g.setColor(Color.red);
+            g.setFont(new Font("Ink Free", Font.BOLD, 40));
+            FontMetrics metrics1 = getFontMetrics(g.getFont());
+            g.drawString("Score: " + FruitsEaten, (SCREEN_WIDTH - metrics1.stringWidth("Score: " + FruitsEaten)) / 2, g.getFont().getSize());
+        } else {
+            GameOver(g);
         }
-        g.setColor(Color.red);
-        g.setFont(new Font("Ink Free", Font.BOLD, 40));
-        FontMetrics metrics = getFontMetrics(g.getFont());
-        g.drawString("Score: " + FruitsEaten, (SCREEN_WIDTH - metrics.stringWidth("Score: " + FruitsEaten)) / 2, g.getFont().getSize());
-//    } else {
-//        GameOver(g);
     }
 
     public void NewFruit() {
@@ -89,7 +93,7 @@ public class GamePanel extends JPanel implements ActionListener {
             case 'W':
                 y[0] = y[0] - UNIT_SIZE; //UP
                 break;
-            case 'Z':
+            case 'S':
                 y[0] = y[0] + UNIT_SIZE; //DOWN
                 break;
             case 'A':
@@ -167,12 +171,12 @@ public class GamePanel extends JPanel implements ActionListener {
             int key = e.getKeyCode();
             switch (key) {
                 case KeyEvent.VK_W:
-                    if (direction != 'Z')  // Ensure the snake cannot reverse direction
+                    if (direction != 'S')  // Ensure the snake cannot reverse direction
                         direction = 'W';  // UP
                     break;
-                case KeyEvent.VK_Z:
+                case KeyEvent.VK_S:
                     if (direction != 'W')
-                        direction = 'Z';  // DOWN
+                        direction = 'S';  // DOWN
                     break;
                 case KeyEvent.VK_A:
                     if (direction != 'D')
